@@ -15,9 +15,9 @@ class CustomerManager(db.Model):
     __tablename__ = "customer_manager"
 
     custID = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    gender = db.Column(db.String(64), nullable=False)
-    email = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(256), nullable=False)
+    gender = db.Column(db.String(6), nullable=False)
+    email = db.Column(db.String(256), nullable=False)
 
     def __init__(self, custID, name, gender, email):
         self.custID = custID

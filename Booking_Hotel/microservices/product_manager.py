@@ -15,9 +15,9 @@ class ProductManager(db.Model):
     __tablename__ = "product_manager"
 
     productID = db.Column(db.Integer, primary_key=True)
-    productName = db.Column(db.String(64), nullable=False)
-    images = db.Column(db.String(64), nullable=False)
-    productRate = db.Column(db.String(64), nullable=False)
+    productName = db.Column(db.String(256), nullable=False)
+    images = db.Column(db.String(256), nullable=False)
+    productRate = db.Column(db.Float, nullable=False)
 
     def __init__(self, productID, productName, images, productRate):
         self.productID = productID
