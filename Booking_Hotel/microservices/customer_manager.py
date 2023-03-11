@@ -15,9 +15,9 @@ class CustomerManager(db.Model):
     __tablename__ = "customer_manager"
 
     custID = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    gender = db.Column(db.String(64), nullable=False)
-    email = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(256), nullable=False)
+    gender = db.Column(db.String(6), nullable=False)
+    email = db.Column(db.String(256), nullable=False)
 
     def __init__(self, custID, name, gender, email):
         self.custID = custID
@@ -37,12 +37,12 @@ class CustomerManager(db.Model):
 # Returns in the format of JSON.
 @app.route("/customer_manager/<int:custID>")
 def find_by_custID(custID):
-    customer_manager = CustomerManager.query.filter_by(custID=custID).first()
-    if customer_manager:
+    customer = CustomerManager.query.filter_by(custID=custID).first()
+    if customer:
         return jsonify(
             {
                 "code": 200,
-                "data": customer_manager.json()
+                "data": customer.json()
             }
         )
     return jsonify(
@@ -68,10 +68,10 @@ def create_customer():
         ), 400
 
     data = request.get_json()
-    customer_manager = CustomerManager(**data)
+    customer = CustomerManager(**data)
 
     try:
-        db.session.add(customer_manager)
+        db.session.add(customer)
         db.session.commit()
     except:
         return jsonify(
@@ -87,7 +87,7 @@ def create_customer():
     return jsonify(
         {
             "code": 201,
-            "data": customer_manager.json()
+            "data": customer.json()
         }
     ), 201
 
