@@ -1,3 +1,5 @@
+// Information required for each payment is RoomName, RoomType, Subtotal, Tax, Total
+
 package booking_hotel.microservices;
 // Error occurs because does not match file directory 
 // Not sure how to fix the above.
