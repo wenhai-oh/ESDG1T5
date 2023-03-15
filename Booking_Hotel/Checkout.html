@@ -7,9 +7,271 @@
     <title>Hotel Bookings CheckOut</title>
 </head>
 <body>
-    <!-- Would get from Booking_Reservation Page after adding to cart -->
+    <!-- Start of Internal CSS -->
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 18px;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 10% 0;
+            position: relative;
+            min-height: 100vh;
+            background: #47abcd;
+            display: flex;
+            justify-content: center;
+                animation: fadein 5s;
+            animation-fill-mode: forwards;
+        }
+
+        .fadeIn {
+            animation: fadein 5s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        label {
+        display: block;
+        }
+        /* Model Container */
+
+        .model {
+        width: 900px;
+        height: 700px;
+        background: #242e5a;
+        color: white;
+        position: relative;
+        animation-fill-mode: forwards;
+        }
+
+        @keyframes slideInFromLeft {
+        0% {
+            transform: translateY(-100%);
+        }
+        100% {
+            transform: translateX(0);
+        }
+        }
+
+        .room {
+        width: 50%;
+        height: 100%;
+        background: url(/Assets/r1.jpg) no-repeat center center;
+        background-size: cover;
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+        }
+
+        .text-cover {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 20px
+        }
+
+        .text-cover > * {
+        margin: 10px 0;
+        }
+
+        .text-cover h1 {
+        font-size: 1.8rem;
+        }
+
+        .text-cover .price {
+        color: #fff;
+        }
+
+        .text-cover .price span {
+        font-size: 1.4rem;
+        font-weight: 700;
+        }
+
+        .payment {
+        width: 50%;
+        height: 100%;
+        color: #fff;
+        display: inline-block;
+        }
+
+        .receipt-box {
+        padding: 20px 20px;
+        border-bottom: 4px solid #fff;
+        }
+
+        .receipt-box h3,
+        .payment-info h3 {
+        margin-bottom: 2rem;
+        }
+
+        .payment-info {
+        padding: 20px;
+        }
+
+
+        input[type=text]{
+            width: 100%;
+            padding: 8px 10px 10px;
+            margin: 15px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        background-color: transparent;
+        }
+        
+        .table td {
+        font-size: 0.8rem;
+        font-style: italic;
+        padding: .25rem;
+        vertical-align: top;
+            
+        }
+
+
+.table td:nth-child(2) {
+  text-align: right;
+}
+    </style>
+    <!-- End of Internal CSS -->
+
+    <!-- Would need to get from Booking_Reservation Page after adding to cart -->
     <!-- Code to get store and retrieve details from Booking_Reservation and present cart -->
 
-    
+    <!-- Creating checkout page-->
+    <div class="model">
+        <div class="room">
+          <div class="text-cover">
+            <h1>Single Bed Room</h1>
+            <p class="price"> 168.00 <span>SGD</span> / Night</p>
+            <hr>
+            <!-- Dummy values need to be replaced-->
+            <p>Guests: 1</p>
+            <p>dd/mm/ to dd/mm (Check in at 12:00)</p>
+          </div>
+        </div><div class="payment">
+          <div class="receipt-box">
+            <h3>Reciept Summary</h3>
+            <table class="table">
+              <tr>
+                <td>SGD 168 x 2 nights</td>
+                <td>subtotal 1</td>
+              </tr>
+              <tr>
+                <td>Discount</td>
+                <td>0 SGD</td>
+              </tr>
+              <tr>
+                <td>Subtotal</td>
+                <td>Subtotal Overall</td>
+              </tr>
+              <tr>
+                <td>Tax 8%</td>
+                <td>Some Calculation</td>
+              </tr>
+              <tfoot>
+                <tr>
+                  <td>Sum</td>
+                  <td>Total Cost</td>
+                </tr>
+              </tfoot>
+            <!-- End of Dummy Values that needs to be replaced -->
+            </table>
+          </div>
+          <div class="payment-info">
+            <h3>Payment Info</h3>
+            <form>
+            <label>Name on Credit Card</label>
+            <input type="text" name="firstname" value="">
+            <label>Credit Card Number</label>
+            <input type="text" name="lastname" value="">
+            <br><br>
+            <!-- <input class="btn" type="submit" value="Book Securly"> -->
+            <!-- Create PayPal Button -->
+
+            <div id="smart-button-container">
+                <div style="text-align: center;">
+                  <div id="paypal-button-container"></div>
+                </div>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        var model = document.querySelector(".model");
+
+        function fadeIn () {
+        console.log('fadein')
+        model.className += " fadeIn";
+        }
+      </script>
+
+      <!-- PayPal SDK -->
+      <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&components=buttons"></script>
+
+      <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=SGD" data-sdk-integration-source="button-factory"></script>
+
+      <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=SGD" data-sdk-integration-source="button-factory"></script>
+      <!-- PayPal Styles and Button Functions -->
+      <!-- Code from https://www.paypal.com/buttons/smart?flowloggingId=f7651579c89f1 -->
+        <script>
+            function initPayPalButton() {
+                paypal.Buttons({
+                    style: {
+                    shape: 'rect',
+                    color: 'blue',
+                    layout: 'vertical',
+                    label: 'paypal',
+                    
+                    },
+            
+                    createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{"amount":{"currency_code":"SGD","value":1.08,"breakdown":{"item_total":{"currency_code":"SGD","value":1},"shipping":{"currency_code":"SGD","value":0},"tax_total":{"currency_code":"SGD","value":0.08}}}}]
+                    });
+                    },
+            
+                    onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(orderData) {
+                        
+                        // Full available details
+                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            
+                        // Show a success message within this page, e.g.
+                        const element = document.getElementById('paypal-button-container');
+                        element.innerHTML = '';
+                        element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            
+                        // Or go to another URL:  actions.redirect('thank_you.html');
+                        
+                    });
+                    },
+            
+                    onError: function(err) {
+                    console.log(err);
+                    }
+                }).render('#paypal-button-container');
+            }
+            initPayPalButton();
+        </script>
+      
 </body>
 </html>
