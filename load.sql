@@ -44,10 +44,13 @@ use inventory_manager;
 create table `inventory_manager` (
 	`date` date NOT NULL,
 	`productName` varchar(256) NOT NULL,
-	`quantity` int NOT NULL,
-	constraint inventory_manager_pk primary key (`date`, `productName`)
+	`quantity` int NOT NULL
+	# constraint inventory_manager_pk primary key (`date`, `productName`)
 );
 
 insert into `inventory_manager` values('2023-03-11', 'Single Room', 200);
 insert into `inventory_manager` values('2023-03-11', 'Double Room', 150);
 insert into `inventory_manager` values('2023-03-11', 'Suite', 50);
+insert into `inventory_manager` values('2023-03-13', 'Single Room', 200);
+insert into `inventory_manager` values('2023-03-13', 'Double Room', 150);
+insert into `inventory_manager` values('2023-03-13', 'Suite', 50);
