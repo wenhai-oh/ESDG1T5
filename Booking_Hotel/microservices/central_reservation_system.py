@@ -28,7 +28,7 @@ payment_URL = "http://localhost:5004/payment"
 @app.route("/crs/<string:fromDate>/<string:toDate>")
 def list_rooms(fromDate, toDate):
     # Initialise list of productName and dateList within the dates specified for room reservation.
-    returnList = []
+    returnDict = {}
     productNameList = ["Single Room", "Double Room", "Suite"]
     dateList = [] # ["2023-03-11", "2023-03-12", ...]
     
@@ -40,7 +40,9 @@ def list_rooms(fromDate, toDate):
         currDate += timedelta(days=1)
 
     for date in dateList:
+        productsDict = {} # {productName: {quantity: 0, productRate: 0}, ...}
         for productName in productNameList:
+            productDetail = {} # {quantity: 0, productRate: 0
             productName = productName.replace(" ", "%20")
             
             # Get data from Inventory Manager based on (date and productName).
@@ -55,19 +57,19 @@ def list_rooms(fromDate, toDate):
                 quantity = inventory["data"]["inventory"][0]["quantity"]
                 productRate = product["data"]["productRate"]
 
-                # Append to returnList.
-                returnList.append({
-                    "date": date,
-                    "details" : {
-                        "roomType": productName,
+                # Append to productList.
+                productDetail = {
                         "quantity": quantity,
                         "productRate": productRate
                     }
-                })
+                productsDict[productName] = productDetail
+        # Append to returnList if date has results.
+        if productsDict != {}:
+            returnDict[date] = productsDict
 
     return jsonify({
         "code": 200,
-        "data": returnList
+        "data": returnDict
     }), 200
 # ================ END Use Case 1: Customer Browse Available Rooms ================
 
