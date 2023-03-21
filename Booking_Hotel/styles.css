@@ -788,6 +788,11 @@ hr{
 	width: 100%;
 }
 
+.checkout a{
+  text-decoration: none;
+  color: #fff;
+}
+
 .total{
   margin-top: 100px;
 	width: 100%;
