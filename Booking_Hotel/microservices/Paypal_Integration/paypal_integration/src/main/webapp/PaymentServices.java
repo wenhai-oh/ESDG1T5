@@ -27,6 +27,9 @@ public class PaymentServices {
 
 
     // Function to check for validity of payment details
+    // Calls getPayerInformation(), getRedirectURLs(), and getTransactionInformation() - which return payer information, redirect URLs, and transaction info respectively.
+    // Values are used to create a new payment object using the PayPal REST API
+    // Finally an API context object is created with the PayPal API Credentials
     public String authorizePayment(OrderDetail orderDetail) throws PayPalRESTException {
 
         Payer payer = getPayerInformation();
@@ -114,6 +117,9 @@ public class PaymentServices {
 		return listTransaction;
 	}
 	
+
+    // takes in a payment object as a parameter and returns the approval URL associated with that payment.The function retrieves a list of links associated with the payment object using the getLinks() method. It then iterates through each link and checks if its relationship type is “approval_url”. If it is, it sets the approval link to the URL associated with that link and breaks out of the loop. Finally, it returns the approval link.
+    
 	private String getApprovalLink(Payment approvedPayment) {
 		List<Links> links = approvedPayment.getLinks();
 		String approvalLink = null;
@@ -128,6 +134,8 @@ public class PaymentServices {
 		return approvalLink;
 	}
 
+    // Function takes in a payment ID and payer ID as parameters. It creates a new payment execution object and sets the payer ID. It then creates a new payment object with the given payment ID. An API context object is created with the PayPal API credentials. Finally it calls the execute() method on the payment object to execute the payment using the PayPal REST API. 
+
 	public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
 		PaymentExecution paymentExecution = new PaymentExecution();
 		paymentExecution.setPayerId(payerId);
@@ -138,6 +146,8 @@ public class PaymentServices {
 
 		return payment.execute(apiContext, paymentExecution);
 	}
+
+    // The getPaymentDetails() function takes in a payment ID as a parameter. An API context object is created with the PayPal API credentials. It then retrieves details about the specified payment using the PayPal Rest API.
 	
 	public Payment getPaymentDetails(String paymentId) throws PayPalRESTException {
 		APIContext apiContext = new APIContext(CLIENT_ID, CLIENT_SECRET, MODE);

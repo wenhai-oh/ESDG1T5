@@ -7,7 +7,6 @@ public class OrderDetail{
     private float total;
 
     public OrderDetail(String roomName, float subTotal, float tax, float total) {
-        suoer();
         this.roomName = roomName;
         this.subTotal = subTotal;
         this.tax = tax;
