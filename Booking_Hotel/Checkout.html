@@ -46,7 +46,7 @@
 
         .model {
         width: 900px;
-        background: #242e5a;
+        background: #fff;
         color: white;
         position: relative;
         animation-fill-mode: forwards;
@@ -99,13 +99,13 @@
         .payment {
         width: 50%;
         height: 100%;
-        color: #fff;
+        color: #242e5a;
         display: inline-block;
         }
 
         .receipt-box {
         padding: 20px 20px;
-        border-bottom: 4px solid #fff;
+        border-bottom: 4px solid #242e5a;
         }
 
         .receipt-box h3,
@@ -178,7 +178,7 @@
               </tr>
               <tr>
                 <td>Tax 8%</td>
-                <td>139.32</td>
+                <td>10.32</td>
               </tr>
               <tfoot>
                 <tr>
@@ -200,11 +200,11 @@
             <!-- <input class="btn" type="submit" value="Book Securly"> -->
             <!-- Create PayPal Button -->
 
-            <div id="smart-button-container">
-                <div style="text-align: center;">
-                  <div id="paypal-button-container"></div>
-                </div>
-            </div>
+              <div id="smart-button-container">
+                  <div style="text-align: center;">
+                    <div id="paypal-button-container"></div>
+                  </div>
+              </div>
           </form>
           </div>
         </div>
@@ -220,8 +220,8 @@
       </script>
 
       <!-- PayPal SDK -->
-      <!-- Inputted Client ID from Sandbox K7APEFBYHBLRW-->
-      <script src="https://www.paypal.com/sdk/js?client-id=K7APEFBYHBLRW&components=buttons"></script>
+      <!-- Inputted Client ID from Sandbox AZDkuMCcS70a1FFVc1NUm2rGAVUYrLAPHKYta7sL5ri8w9xI-qbM1fG8KPtd0X_UbsxiFw3Jh_pl164y-->
+      <script src="https://www.paypal.com/sdk/js?client-id=AZDkuMCcS70a1FFVc1NUm2rGAVUYrLAPHKYta7sL5ri8w9xI-qbM1fG8KPtd0X_UbsxiFw3Jh_pl164y&components=buttons"></script>
 
       <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=SGD" data-sdk-integration-source="button-factory"></script>
 
