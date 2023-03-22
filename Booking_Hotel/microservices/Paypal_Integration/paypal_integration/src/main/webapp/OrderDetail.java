@@ -8,9 +8,9 @@ public class OrderDetail{
 
     public OrderDetail(String roomName, String subTotal, String tax, String total) {
         this.roomName = roomName;
-        this.subTotal = subTotal;
-        this.tax = tax;
-        this.total = total;
+        this.subTotal = Float.parseFloat(subTotal);
+        this.tax = Float.parseFloat(tax);
+        this.total = Float.parseFloat(total);
     }
 
     // Getters Functions for the above
