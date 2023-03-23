@@ -679,11 +679,12 @@ hr{
   margin-bottom: 20px;
 }
 
-.cartHeading{
+.cartHeading {
 	font-size: 20px;
 	font-family: 'Roboto Slab', serif;
 	font-weight: 700;
 	color: #2F3841;
+  width: 80%;
 }
 
 .cartAction{
@@ -850,4 +851,28 @@ hr{
   padding-right: 6%;
 }
 
+.Cart table{
+  border:0;
+  margin-left: 5%;
+}
+
+.Cart table td {
+  padding: 2px;
+}
+
+.Cart table td input[type=text]{
+  border: none;
+  background-color: white;
+  color: #202020;
+  font-size: x-large;
+  text-align: right;
+  font-weight: 600;
+  font-family: 'Roboto Slab', serif;
+}
+
+.Cart table td input[type=submit]{
+  margin-left: 10%;
+  border-radius: 4px;
+  font-family: 'Roboto Slab', serif;
+}
 
