@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 #create reservation manager - return CustID from ReservationID, delete reservation - return status, Reservation ID  return CustID and ProductID
-#Reservation Manager (reservationID, custID, productID, status)
+#Reservation Manager (reservationID, custID, Startdate, EndDate productID, Quantity)
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/reservation_manager"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -16,21 +16,27 @@ class ReservationManager(db.Model):
 
     reservationID = db.Column(db.Integer, primary_key=True)
     custID = db.Column(db.Integer, primary_key=True)
+    StartDate = db.Column(db.String(256),nullable=False)
+    EndDate = db.Column(db.String(256),nullable=False)
     productID = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String(256), nullable=False)
+    Quantity = db.Column(db.Integer, primary_key=True)
 
-    def __init__(self, reservationID, custID, productID, status):
+    def __init__(self, reservationID, custID, StartDate, EndDate, productID, Quantity):
         self.reservationID = reservationID
         self.custID = custID
+        self.StartDate = StartDate
+        self.EndDate = EndDate
         self.productID = productID
-        self.status = status
+        self.Quantity = Quantity
 
     def json(self):
         return {
             "reservationID": self.reservationID,
             "custID": self.custID,
+            "StartDate" : self.StartDate,
+            "EndDate" : self.EndDate,
             "productID": self.productID,
-            "status": self.status,
+            "Quantity": self.Quantity,
         }
       
 # Retrive custID/ProductID/Status by reservationID
@@ -57,18 +63,12 @@ def find_by_reservationID(reservationID):
 def delete_reservation(reservationID):
     reservation = ReservationManager.query.filter_by(reservationID=reservationID).first()
     if reservation:
-        # update the status of the reservation to "cancelled"
-        reservation.status = "cancelled"
-        db.session.commit()
-
-        # delete the reservation from the database
         db.session.delete(reservation)
         db.session.commit()
-
         return jsonify(
             {
                 "code": 200,
-                "message": "Reservation with ID {} has been deleted and marked as cancelled.".format(reservationID)
+                "message": "Reservation with ID {} has been cancelled.".format(reservationID)
             }
         )
     return jsonify(
