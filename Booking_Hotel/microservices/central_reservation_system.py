@@ -6,7 +6,7 @@ import os
 import sys
 
 import requests
-from invokes import invoke_http
+from invoke import invoke_http
 
 app = Flask(__name__)
 CORS(app)
