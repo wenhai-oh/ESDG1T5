@@ -25,106 +25,102 @@
     
     </head>
 <body>
-    <!-- Pop Up Section, Unless Pressed "Add to Cart" won't show -->
-        <!-- This section only covers for one room -->
-        <form>
-            <div class="Cart container">
-                <div class="cartHeader">
-                    <h3 class="cartHeading">Shopping Cart</h3>
-                    <h5 class="cartAction">Remove all</h5>
-                </div>
     
+    <div class="Cart container">
+        <h1 class="cartHeader">Check Out</h1>
+        <form action="authorize_payment" method="post">
+            <table>
                 <div class="CartItems">
                     <div class="image-box">
                         <img src="../Assets/r1.jpg" style="height: 200px;">
                     </div>
-    
-                    <!-- About -->
                     <div class="cartAbout">
+                        <!-- Need to set name and value -->
                         <h1 class="cartTitle">Single Bed Room</h1>
                         <h3 class="cartSubtitle">1 x Single Bed Room</h3>
                     </div>
-    
-                    <!-- counter -->
                     <div class="cartCounter">
                         <div class="cart-btn">+</div>
                         <div class="count">1</div>
                         <div class="cart-btn">-</div>
                     </div>
-    
-                    <!-- Prices -->
                     <div class="cartPrices">
                         <div class="amount">$129</div>
                         <div class="remove"><u>Remove</u></div>
                     </div>
+                    
+                    
+                    <tr>
+                        <td class="cartHeading">Room Name:</td>
+                        <td><input type="text" name="roomName" value="Single Bed Room"></td>
+                    </tr>
+                    <tr>
+                        <td class="cartHeading">Sub Total:</td>
+                        <td><input type="text" name="subTotal" value="129"></td>
+                    </tr>
+                    <tr>
+                        <td class="cartHeading">Tax:</td>
+                        <td><input type="text" name="tax" value="10.32"></td>
+                    </tr>
+                    <tr>
+                        <td class="cartHeading">Total:</td>
+                        <td><input type="text" name="total" value="139.32"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" name="total" value="checkout"></td>
+                    </tr>
                 </div>
-    
-                <hr>
-                <div class="checkout">
-                    <div class="total">
-                        <div>
-                            <div class="cartSubtotal">Sub-Total</div>
-                            <div class="items">1 item</div>
-                        </div>
-                        <div class="total-amount">$129 SGD</div>
+            </table>
+        </form>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer-clean">
+        <footer>
+            <div class="container">
+
+                <div class="row justify-content-center">
+
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>Services</h3>
+                        <ul>
+                            <li><a href="#">Gym Hours</a></li>
+                            <li><a href="#">Swimming Pool Hours</a></li>
+                            <li><a href="#">Spa & Massages</a></li>
+                        </ul>
                     </div>
-                    <div id="smart-button-container">
-                        <div style="text-align: center;">
-                            <div id="paypal-button-container"></div>
-                        </div>
+
+
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>About</h3>
+                        <ul>
+                            <li><a href="#">Boat Tours</a></li>
+                            <li><a href="#">Surfing Lessons</a></li>
+                            <li><a href="#">Diving & Smorking</a></li>
+                        </ul>
+                    </div>
+
+
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>Careers</h3>
+                        <ul>
+                            <li><a href="#">Job openings</a></li>
+                            <li><a href="#">Employee success</a></li>
+                            <li><a href="#">Benefits</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 item social">
+                    <a href="#"><i class="icon ion-social-facebook"></i></a>
+                    <a href="#"><i class="icon ion-social-twitter"></i></a>
+                    <a href="#"><i class="icon ion-social-snapchat"></i></a>
+                    <a href="#"><i class="icon ion-social-instagram"></i></a>
+                    <p class="copyright">CheckInn © 2023</p>
                     </div>
                 </div>
             </div>
-        </form>
-        
-
-        <!-- Footer Section -->
-        <div class="footer-clean">
-            <footer>
-                <div class="container">
-
-                    <div class="row justify-content-center">
-
-                        <div class="col-sm-4 col-md-3 item">
-                            <h3>Services</h3>
-                            <ul>
-                                <li><a href="#">Gym Hours</a></li>
-                                <li><a href="#">Swimming Pool Hours</a></li>
-                                <li><a href="#">Spa & Massages</a></li>
-                            </ul>
-                        </div>
-
-
-                        <div class="col-sm-4 col-md-3 item">
-                            <h3>About</h3>
-                            <ul>
-                                <li><a href="#">Boat Tours</a></li>
-                                <li><a href="#">Surfing Lessons</a></li>
-                                <li><a href="#">Diving & Smorking</a></li>
-                            </ul>
-                        </div>
-
-
-                        <div class="col-sm-4 col-md-3 item">
-                            <h3>Careers</h3>
-                            <ul>
-                                <li><a href="#">Job openings</a></li>
-                                <li><a href="#">Employee success</a></li>
-                                <li><a href="#">Benefits</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="col-lg-3 item social">
-                        <a href="#"><i class="icon ion-social-facebook"></i></a>
-                        <a href="#"><i class="icon ion-social-twitter"></i></a>
-                        <a href="#"><i class="icon ion-social-snapchat"></i></a>
-                        <a href="#"><i class="icon ion-social-instagram"></i></a>
-                        <p class="copyright">CheckInn © 2023</p>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
+        </footer>
+    </div>
 
     <!-- PayPal SDK -->
     <!-- Inputted Client ID from Sandbox AZDkuMCcS70a1FFVc1NUm2rGAVUYrLAPHKYta7sL5ri8w9xI-qbM1fG8KPtd0X_UbsxiFw3Jh_pl164y-->

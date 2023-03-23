@@ -672,10 +672,11 @@ hr{
 .cartHeader{
 	margin: auto;
 	width: 90%;
-	height: 15%;
+	height: 10%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+  margin-bottom: 20px;
 }
 
 .cartHeading{
@@ -701,6 +702,7 @@ hr{
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+  margin-bottom: 2%;
 }
 
 .image-box{
@@ -847,3 +849,5 @@ hr{
   padding-left: 6%;
   padding-right: 6%;
 }
+
+
