@@ -25,7 +25,7 @@ public class AuthorizePaymentServlet extends HttpServlet {
 		String tax = request.getParameter("tax");
 		String total = request.getParameter("total");
 		
-		OrderDetail orderDetail = new OrderDetail(product, subtotal, shipping, tax, total);
+		OrderDetail orderDetail = new OrderDetail(roomName, subtotal, tax, total);
 
 		try {
 			PaymentServices paymentServices = new PaymentServices();

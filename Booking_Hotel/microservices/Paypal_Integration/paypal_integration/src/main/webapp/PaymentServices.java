@@ -50,8 +50,6 @@ public class PaymentServices {
 		System.out.println(approvedPayment);
 
         return getApprovalLink(approvedPayment);
-
-        return null;
     }
 
     // Payer Object
@@ -77,8 +75,10 @@ public class PaymentServices {
     private RedirectUrls getRedirectURLs() {
         RedirectUrls redirectUrls = new RedirectUrls();
         // To redirect user back to store page, when they don't want to proceed with the payment.
-        redirectUrls.setCancelUrl("http://localhost/Paypal_integration/cancel.html");
-        redirectUrls.setReturnUrl("http://localhost/Paypal_integration/review_payment");
+        // Link to cancel.jsp
+        redirectUrls.setCancelUrl("");
+        // Link to review_payment.html
+        redirectUrls.setReturnUrl("");
 
         return redirectUrls;
     }
