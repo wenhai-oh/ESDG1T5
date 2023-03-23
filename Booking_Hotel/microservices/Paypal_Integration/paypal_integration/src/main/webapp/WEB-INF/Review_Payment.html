@@ -189,24 +189,6 @@
             <!-- End of Dummy Values that needs to be replaced -->
             </table>
           </div>
-          <div class="payment-info">
-            <h3>Payment Methods:</h3>
-            <form action="authorize_payment" method="post">
-            <!-- <label>Name on Credit Card</label>
-            <input type="text" name="firstname" value="">
-            <label>Credit Card Number</label>
-            <input type="text" name="lastname" value=""> -->
-            <!-- <br><br> -->
-            <!-- <input class="btn" type="submit" value="Book Securly"> -->
-            <!-- Create PayPal Button -->
-
-              <div id="smart-button-container">
-                  <div style="text-align: center;">
-                    <div id="paypal-button-container"></div>
-                  </div>
-              </div>
-          </form>
-          </div>
         </div>
       </div>
 
@@ -218,57 +200,6 @@
         model.className += " fadeIn";
         }
       </script>
-
-      <!-- PayPal SDK -->
-      <!-- Inputted Client ID from Sandbox AZDkuMCcS70a1FFVc1NUm2rGAVUYrLAPHKYta7sL5ri8w9xI-qbM1fG8KPtd0X_UbsxiFw3Jh_pl164y-->
-      <script src="https://www.paypal.com/sdk/js?client-id=AZDkuMCcS70a1FFVc1NUm2rGAVUYrLAPHKYta7sL5ri8w9xI-qbM1fG8KPtd0X_UbsxiFw3Jh_pl164y&components=buttons"></script>
-
-      <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=SGD" data-sdk-integration-source="button-factory"></script>
-
-      <!-- <script src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=SGD" data-sdk-integration-source="button-factory"></script> -->
-      <!-- PayPal Styles and Button Functions -->
-      <!-- Code from https://www.paypal.com/buttons/smart?flowloggingId=f7651579c89f1 -->
-        <script>
-            function initPayPalButton() {
-                paypal.Buttons({
-                    style: {
-                    shape: 'rect',
-                    color: 'blue',
-                    layout: 'vertical',
-                    label: 'paypal',
-                    
-                    
-                    },
-            
-                    createOrder: function(data, actions) {
-                    return actions.order.create({
-                      purchase_units: [{"amount":{"currency_code":"SGD","value":1.08,"breakdown":{"item_total":{"currency_code":"SGD","value":1},"tax_total":{"currency_code":"SGD","value":0.08}}}}]
-                    });
-                    },
-            
-                    onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(orderData) {
-                        
-                        // Full available details
-                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-            
-                        // Show a success message within this page, e.g.
-                        const element = document.getElementById('paypal-button-container');
-                        element.innerHTML = '';
-                        element.innerHTML = '<h3>Thank you for your payment!</h3>';
-            
-                        // Or go to another URL:  actions.redirect('thank_you.html');
-                        
-                    });
-                    },
-            
-                    onError: function(err) {
-                    console.log(err);
-                    }
-                }).render('#paypal-button-container');
-            }
-            initPayPalButton();
-        </script>
       
 </body>
 </html>
