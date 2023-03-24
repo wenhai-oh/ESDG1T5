@@ -345,7 +345,7 @@ input {
 /* Service Section */
 /*--------------wrapper--------*/
 .wrapper {
-  background-image: url("../Assets/ami.jpg");
+  background-image: url("/Booking_Hotel/Assets/ami.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
