@@ -15,7 +15,7 @@ app.config['STRIPE_SECRET_KEY'] = 'sk_test_51Mp7eaDR3XsfzYNcNN274W7Hmlsuvr7nDhtF
 @app.route('/')
 def index():
     return render_template(
-        'index.html', 
+        'Booking_Cart.html', 
         # checkout_session_id=session['id'], 
         # checkout_public_key=app.config['STRIPE_PUBLIC_KEY']
     )
@@ -23,6 +23,7 @@ def index():
 @app.route('/stripe_pay')
 @cross_origin()
 def stripe_pay():
+    # print('hello')
     stripe.api_key = "sk_test_51Mp7eaDR3XsfzYNcNN274W7Hmlsuvr7nDhtFN1UtuVH9dHVBRVVC9PRbhrL5BZ2SVEGfmoFEO8Z7CYr7BuxszJng00ScaMPkRp"
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
@@ -40,10 +41,16 @@ def stripe_pay():
         cancel_url=url_for('index', _external=True),
 
     )
-    print(session)
+    # Retrieve the Checkout Session object
+    session = stripe.checkout.Session.retrieve(session.id)
+    # Access the Payment Intent ID associated with the Checkout Session
+    payment_intent_id = session['payment_intent']
+    print(payment_intent_id)
 
     return {
-        'checkout_session_id': session['id'], 
+        # Change this line to paymentintentID instead.
+        # Reason because checkout sessions will expire within an hour max, payment_intent_id doesn't expire, its associated or created whenever a checkout session is created.
+        'payment_intent_id': payment_intent_id,
         'checkout_public_key': app.config['STRIPE_PUBLIC_KEY']
     }
 
@@ -60,7 +67,7 @@ def stripe_webhook():
         abort(400)
     payload = request.get_data()
     sig_header = request.environ.get('HTTP_STRIPE_SIGNATURE')
-    endpoint_secret = 'YOUR_ENDPOINT_SECRET'
+    endpoint_secret = 'whsec_LakNprCWo6aY0oR5Y2xtfMqHtfwKSx7n'
     event = None
 
     try:
