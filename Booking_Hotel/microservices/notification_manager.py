@@ -13,6 +13,33 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 CORS(app)
 
+#Generate random OTP for input CustID and email from CRS
+@app.route("/notification_manager/generate_otp", methods=["POST"])
+def generate_otp():
+    custID = request.json.get("custID")
+    email = request.json.get("email")
+
+    # Generate a 6-digit OTP
+    otp = random.randint(100000, 999999)
+
+    # TODO: Send the OTP to the email address using a third-party library or service
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "custID": custID,
+                "email": email,
+                "otp": otp,
+            },
+            "message": "OTP generated successfully."
+        }
+    )
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
+
+#code to be removed
+"""
 class NotificationManager(db.Model):
     __tablename__ = "notification_manager"
 
@@ -82,3 +109,4 @@ def delete_notification(notificationID):
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
+"""
