@@ -22,4 +22,4 @@ def send_otp():
     return f'An OTP has been sent to your email. Your OTP is {otp}.'
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(, port=5000, debug = True)
