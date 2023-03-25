@@ -13,28 +13,53 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 CORS(app)
 
-#Generate random OTP for input CustID and email from CRS
-@app.route("/notification_manager/generate_otp", methods=["POST"])
-def generate_otp():
-    custID = request.json.get("custID")
-    email = request.json.get("email")
+#Send email through ampq server
+import pika
+import json
 
-    # Generate a 6-digit OTP
-    otp = random.randint(100000, 999999)
+# RabbitMQ server settings
+RABBITMQ_HOST = "localhost"
+RABBITMQ_PORT = 5672
+RABBITMQ_USER = "guest"
+RABBITMQ_PASSWORD = "guest"
+RABBITMQ_QUEUE = "email_queue"
 
-    # TODO: Send the OTP to the email address using a third-party library or service
+# function to send email
+def send_email(email_address, email_content):
+    # connect to RabbitMQ server
+    connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host=RABBITMQ_HOST, port=RABBITMQ_PORT, credentials=pika.PlainCredentials(
+            RABBITMQ_USER, RABBITMQ_PASSWORD)))
 
-    return jsonify(
-        {
-            "code": 200,
-            "data": {
-                "custID": custID,
-                "email": email,
-                "otp": otp,
-            },
-            "message": "OTP generated successfully."
-        }
-    )
+    # create a channel
+    channel = connection.channel()
+
+    # declare the queue
+    channel.queue_declare(queue=RABBITMQ_QUEUE)
+
+    # create the email message
+    email_message = {
+        "to": email_address,
+        "subject": "Notification Email",
+        "content": email_content
+    }
+
+    # convert the email message to JSON
+    email_message_json = json.dumps(email_message)
+
+    # publish the email message to the queue
+    channel.basic_publish(exchange="", routing_key=RABBITMQ_QUEUE, body=email_message_json)
+
+    # close the connection
+    connection.close()
+
+# route to send email
+@app.route("/send_email", methods=["POST"])
+def send_email_route():
+    email_address = request.form.get("email_address")
+    email_content = request.form.get("email_content")
+    send_email(email_address, email_content)
+    return jsonify({"message": "Email sent successfully"})
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
 
