@@ -13,7 +13,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 CORS(app)
 
-#Send email through ampq server
+#Send email through rabbitmq(ampq) server
 import pika
 import json
 
@@ -25,21 +25,20 @@ RABBITMQ_PASSWORD = "guest"
 RABBITMQ_QUEUE = "email_queue"
 
 # function to send email
-def send_email(email_address, email_content):
+#email and email_content(OTP) are inputs provided by the CRS
+def send_email(email, email_content):
     # connect to RabbitMQ server
     connection = pika.BlockingConnection(pika.ConnectionParameters(
         host=RABBITMQ_HOST, port=RABBITMQ_PORT, credentials=pika.PlainCredentials(
             RABBITMQ_USER, RABBITMQ_PASSWORD)))
-
-    # create a channel
+    
     channel = connection.channel()
 
-    # declare the queue
     channel.queue_declare(queue=RABBITMQ_QUEUE)
 
     # create the email message
     email_message = {
-        "to": email_address,
+        "to": email,
         "subject": "Notification Email",
         "content": email_content
     }
@@ -56,9 +55,9 @@ def send_email(email_address, email_content):
 # route to send email
 @app.route("/send_email", methods=["POST"])
 def send_email_route():
-    email_address = request.form.get("email_address")
+    email = request.form.get("email_address")
     email_content = request.form.get("email_content")
-    send_email(email_address, email_content)
+    send_email(email, email_content)
     return jsonify({"message": "Email sent successfully"})
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
