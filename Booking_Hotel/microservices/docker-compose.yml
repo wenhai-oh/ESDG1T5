@@ -5,29 +5,6 @@ volumes:
 
 services:
   ###################################
-  # CRS: Central Reservation System microservice
-  ###################################
-  central_reservation_system:
-    build:
-      context: ./
-      dockerfile: central_reservation_system.Dockerfile
-    image: wenhai87/central_reservation_system:esd
-    restart: always
-    depends_on: 
-      # - payment
-      - inventory
-      - product
-      - customer
-      - reservation
-      - rabbitmq
-    environment:
-      PYTHONUNBUFFERED: 1
-      product_manager_URL: http://localhost:5001/product
-      inventory_manager_URL: http://localhost:5002/inventory
-    ports:
-      - "5000:5000"
-
-  ###################################
   # Payment: The Payment microservice
   ###################################
   # payment:
@@ -52,6 +29,21 @@ services:
   #     PYTHONUNBUFFERED: 1
 
   ###################################
+  # Product: The Product microservice
+  ###################################
+  product:
+    build:
+      context: ./
+      dockerfile: product.Dockerfile
+    image: wenhai87/product:esd
+    restart: always
+    environment:
+      dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/product_manager
+      PYTHONUNBUFFERED: 1
+    # ports:
+    #   - "5001:5001"
+
+  ###################################
   # Inventory: The Inventory microservice
   ###################################
   inventory:
@@ -63,20 +55,20 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory_manager
       PYTHONUNBUFFERED: 1
-    ports:
-      - "5002:5002"
-  
-  ###################################
-  # Product: The Product microservice
-  ###################################
-  product:
+    # ports:
+    #   - "5002:5002"
+
+  ##################################
+  # Reservation: The Reservation microservice
+  ##################################
+  reservation:
     build:
       context: ./
-      dockerfile: product.Dockerfile
-    image: wenhai87/product:esd
+      dockerfile: reservation.Dockerfile
+    image: wenhai87/reservation:esd
     restart: always
     environment:
-      dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/product_manager
+      dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/reservation_manager
       PYTHONUNBUFFERED: 1
 
   ##################################
@@ -92,19 +84,6 @@ services:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/customer_manager
       PYTHONUNBUFFERED: 1
 
-  ##################################
-  # Reservation: The Reservation microservice
-  ##################################
-  reservation:
-    build:
-      context: ./
-      dockerfile: reservation.Dockerfile
-    image: wenhai87/reservation:esd
-    restart: always
-    environment:
-      dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/reservation_manager
-      PYTHONUNBUFFERED: 1
-
   ####################################
   # RabbitMQ: The messaging broker   
   ####################################
@@ -117,3 +96,30 @@ services:
       - "15672:15672"
     volumes: 
       - rabbitmq_data:/var/lib/rabbitmq
+
+  ###################################
+  # CRS: Central Reservation System microservice
+  ###################################
+  central_reservation_system:
+    build:
+      context: ./
+      dockerfile: central_reservation_system.Dockerfile
+    image: wenhai87/central_reservation_system:esd
+    restart: always
+    depends_on: 
+      # - payment
+      - inventory
+      - product
+      - customer
+      - reservation
+      - rabbitmq
+    environment:
+      PYTHONUNBUFFERED: 1
+      product_manager_URL: http://product:5001/product_manager
+      inventory_manager_URL: http://inventory:5002/inventory_manager
+      reservation_manager_URL: http://reservation:5003/reservation_manager
+      customer_manager_URL: http://customer:5004/customer_manager
+      # notification_URL: http://notification:5005/notification
+      # payment_URL: http://payment:5006/payment
+    ports:
+      - "5000:5000"
