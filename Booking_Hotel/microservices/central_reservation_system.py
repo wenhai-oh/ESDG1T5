@@ -47,12 +47,12 @@ def list_rooms(fromDate, toDate):
             
             # Get data from Inventory Manager based on (date and productName).
             inventory = invoke_http(inventory_manager_URL +  "/" + date + "/" + productName, method="GET")
-
+            print("inv", inventory)
             # link productName and ProductRate.
             if "data" in inventory:
                 # Get data from Product Manager based on (productName).
                 product = invoke_http(product_manager_URL +  "/" + productName, method="GET")
-
+                print("product", product)
                 productName = inventory["data"]["inventory"][0]["productName"].replace("%20", " ")
                 quantity = inventory["data"]["inventory"][0]["quantity"]
                 productRate = product["data"]["productRate"]
@@ -67,6 +67,12 @@ def list_rooms(fromDate, toDate):
         if productsDict != {}:
             returnDict[date] = productsDict
 
+    if returnDict == {}:
+        return jsonify({
+            "code": 404,
+            "message": "No available rooms."
+        }), 404
+    
     return jsonify({
         "code": 200,
         "data": returnDict
