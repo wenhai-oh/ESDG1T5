@@ -61,8 +61,10 @@ services:
     image: wenhai87/inventory:esd
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://root@localhost:3306/inventory_manager
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory_manager
       PYTHONUNBUFFERED: 1
+    ports:
+      - "5002:5002"
   
   ###################################
   # Product: The Product microservice
@@ -74,7 +76,7 @@ services:
     image: wenhai87/product:esd
     restart: always
     environment:
-      dbURL:  mysql+mysqlconnector://root@localhost:3306/product_manager
+      dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/product_manager
       PYTHONUNBUFFERED: 1
 
   ##################################
@@ -87,7 +89,7 @@ services:
     image: wenhai87/customer:esd
     restart: always
     environment:
-      dbURL: mysql+mysqlconnector://root@localhost:3306/customer_manager
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/customer_manager
       PYTHONUNBUFFERED: 1
 
   ##################################
@@ -100,7 +102,7 @@ services:
     image: wenhai87/reservation:esd
     restart: always
     environment:
-      dbURL:  mysql+mysqlconnector://root@localhost:3306/reservation_manager
+      dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/reservation_manager
       PYTHONUNBUFFERED: 1
 
   ####################################
