@@ -55,11 +55,11 @@ def get_all_product():
         }
     ), 404
 
-# Get product by productID.
+# Get product by productName.
 # Returns in the format of JSON.
-@app.route("/product/<int:productID>")
-def find_by_productID(productID):
-    product = ProductManager.query.filter_by(productID=productID).first()
+@app.route("/product/<string:productName>")
+def find_by_productName(productName):
+    product = ProductManager.query.filter_by(productName=productName).first()
     if product:
         return jsonify(
             {
@@ -70,9 +70,8 @@ def find_by_productID(productID):
     return jsonify(
         {
             "code": 404,
-            "message": "Product with ID {} not found.".format(productID)
+            "message": "Product with Name {} not found.".format(productName)
         }
     ), 404
-
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
