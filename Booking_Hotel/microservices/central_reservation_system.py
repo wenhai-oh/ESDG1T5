@@ -11,12 +11,12 @@ from invokes import invoke_http
 app = Flask(__name__)
 CORS(app)
 
-customer_manager_URL = "http://localhost:5000/customer_manager"
-product_manager_URL = "http://localhost:5001/product"
-inventory_manager_URL = "http://localhost:5002/inventory"
+product_manager_URL = os.environ.get('product_manager_URL') or "http://localhost:5001/product"
+inventory_manager_URL = os.environ.get('inventory_manager_URL') or "http://localhost:5002/inventory"
 reservation_manager_URL = "http://localhost:5003/reservation_manager"
-notification_URL = "http://localhost:5004/notification"
-payment_URL = "http://localhost:5004/payment"
+customer_manager_URL = "http://localhost:5004/customer_manager"
+notification_URL = "http://localhost:5005/notification"
+payment_URL = "http://localhost:5006/payment"
 
 # Database Tables:
 # Customer Manager (CustID, Name, Gender, Email)
@@ -93,4 +93,4 @@ def cancel_reservation(reservationID):
 # ================ END Use Case 3: Customer Make Payment for Room Reservation ================
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

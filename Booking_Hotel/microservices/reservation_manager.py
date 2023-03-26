@@ -1,3 +1,4 @@
+from os import environ
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -5,7 +6,7 @@ from flask_cors import CORS
 #create reservation manager - return CustID from ReservationID, delete reservation - return status, Reservation ID  return CustID and ProductID
 #Reservation Manager (reservationID, custID, Startdate, EndDate productID, Quantity)
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/reservation_manager"
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('dbURL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -79,4 +80,4 @@ def delete_reservation(reservationID):
     ), 404
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

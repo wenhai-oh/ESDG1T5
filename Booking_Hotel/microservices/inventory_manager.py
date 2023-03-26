@@ -1,3 +1,4 @@
+from os import environ
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -5,7 +6,7 @@ from flask_cors import CORS
 # Inventory Manager (date, productName, quantity)
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/inventory_manager"
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('dbURL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -52,4 +53,4 @@ def get_all_inventory():
     ), 404
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5002, debug=True)

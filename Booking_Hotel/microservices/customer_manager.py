@@ -1,3 +1,4 @@
+from os import environ
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -5,7 +6,7 @@ from flask_cors import CORS
 # Customer Manager (CustID, Name, Gender, Email)
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/customer_manager"
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('dbURL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -92,4 +93,4 @@ def create_customer():
     ), 201
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5004, debug=True)

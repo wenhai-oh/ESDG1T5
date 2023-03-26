@@ -1,3 +1,4 @@
+from os import environ
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -5,7 +6,7 @@ from flask_cors import CORS
 # Product Manager (productID, productName, images, productRate)
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/product_manager"
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('dbURL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -74,4 +75,4 @@ def find_by_productID(productID):
     ), 404
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)

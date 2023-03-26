@@ -1,3 +1,4 @@
+from os import environ
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -7,7 +8,7 @@ from flask_cors import CORS
 # Notification Manager ()
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/notification_manager"
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('dbURL') # "mysql+mysqlconnector://root@localhost:3306/notification_manager"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -60,4 +61,4 @@ def send_email_route():
     send_email(email, email_content)
     return jsonify({"message": "Email sent successfully"})
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
