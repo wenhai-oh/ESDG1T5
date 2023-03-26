@@ -54,3 +54,18 @@ insert into `inventory_manager` values('2023-03-11', 'Suite', 50);
 insert into `inventory_manager` values('2023-03-13', 'Single Room', 200);
 insert into `inventory_manager` values('2023-03-13', 'Double Room', 150);
 insert into `inventory_manager` values('2023-03-13', 'Suite', 50);
+
+CREATE TABLE reservation_manager (
+    reservationID INT NOT NULL,
+    custID INT NOT NULL,
+    StartDate VARCHAR(256) NOT NULL,
+    EndDate VARCHAR(256) NOT NULL,
+    productID INT NOT NULL,
+    Quantity INT NOT NULL,
+    PRIMARY KEY (reservationID, custID, productID, Quantity)
+);
+
+INSERT INTO reservation_manager (reservationID, custID, StartDate, EndDate, productID, Quantity) 
+VALUES 
+(1, 1, '2023-03-24 14:30:00', '2023-03-27 14:30:00', 1, 2),
+(2, 2, '2023-03-24 14:30:00', '2023-03-29 14:30:00', 2, 1);
