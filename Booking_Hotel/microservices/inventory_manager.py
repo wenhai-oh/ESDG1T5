@@ -52,5 +52,26 @@ def get_all_inventory():
         }
     ), 404
 
+# Get all inventory by date and productName.
+# Returns in the format of JSON.
+@app.route("/inventory/<string:date>/<string:productName>")
+def find_by_date_and_productName(date, productName):
+    inventoryList = InventoryManager.query.filter_by(date=date, productName=productName).all()
+    if len(inventoryList):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "inventory": [inventory.json() for inventory in inventoryList]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Inventory not found."
+        }
+    ), 404
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
