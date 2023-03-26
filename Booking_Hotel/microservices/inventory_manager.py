@@ -33,7 +33,7 @@ class InventoryManager(db.Model):
 
 # Get all inventory items.
 # Returns in the format of JSON.
-@app.route("/inventory")
+@app.route("/inventory_manager")
 def get_all_inventory():
     inventoryList = InventoryManager.query.all()
     if len(inventoryList):
@@ -54,7 +54,7 @@ def get_all_inventory():
 
 # Get all inventory by date and productName.
 # Returns in the format of JSON.
-@app.route("/inventory/<string:date>/<string:productName>")
+@app.route("/inventory_manager/<string:date>/<string:productName>")
 def find_by_date_and_productName(date, productName):
     inventoryList = InventoryManager.query.filter_by(date=date, productName=productName).all()
     if len(inventoryList):

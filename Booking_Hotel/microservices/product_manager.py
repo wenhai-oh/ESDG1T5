@@ -36,7 +36,7 @@ class ProductManager(db.Model):
 
 # Get all products.
 # Returns in the format of JSON.
-@app.route("/product")
+@app.route("/product_manager")
 def get_all_product():
     productList = ProductManager.query.all()
     if len(productList):
@@ -57,7 +57,7 @@ def get_all_product():
 
 # Get product by productName.
 # Returns in the format of JSON.
-@app.route("/product/<string:productName>")
+@app.route("/product_manager/<string:productName>")
 def find_by_productName(productName):
     product = ProductManager.query.filter_by(productName=productName).first()
     if product:
