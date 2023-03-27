@@ -22,6 +22,7 @@ payment_URL = "http://localhost:5006/payment"
 # Customer Manager (CustID, Name, Gender, Email)
 # Product Manager (productID, productName, images, productRate)
 # Inventory Manager (date, productName, quantity)
+# Reservation Manager (reservationID, custID, StartDate, EndDate, productID, Quantity)
 
 # ================ Use Case 1: Customer Browse Available Rooms ================
 # Get available rooms based on dates [fromDate, toDate].

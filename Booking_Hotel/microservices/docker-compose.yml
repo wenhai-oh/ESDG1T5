@@ -70,6 +70,8 @@ services:
     environment:
       dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/reservation_manager
       PYTHONUNBUFFERED: 1
+    # ports:
+    #   - "5003:5003"    
 
   ##################################
   # Customer: The Customer microservice
@@ -83,6 +85,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/customer_manager
       PYTHONUNBUFFERED: 1
+    # ports:
+    #   - "5004:5004" 
 
   ####################################
   # RabbitMQ: The messaging broker   
@@ -114,6 +118,8 @@ services:
       - reservation
       - rabbitmq
     environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
       PYTHONUNBUFFERED: 1
       product_manager_URL: http://product:5001/product_manager
       inventory_manager_URL: http://inventory:5002/inventory_manager
