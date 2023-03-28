@@ -2,6 +2,7 @@ from os import environ
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_mail import Mail, Message
 
 # from notification_manager import NotificationManager
 
@@ -11,7 +12,14 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('dbURL') # "mysql+mysqlconnector://root@localhost:3306/notification_manager"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'lokezhankang@gmail.com' # replace with your email address
+app.config['MAIL_PASSWORD'] = 'pkewefqbhwwibywy' # replace with your email password
+mail = Mail(app)
+
+# db = SQLAlchemy(app)
 CORS(app)
 
 #Send email through rabbitmq(ampq) server
@@ -54,11 +62,12 @@ def send_email(email, email_content):
     connection.close()
 
 # route to send email
-@app.route("/send_email", methods=["POST"])
+@app.route("/send_email", methods=['POST', 'GET'])
 def send_email_route():
     email = request.form.get("email_address")
     email_content = request.form.get("email_content")
     send_email(email, email_content)
     return jsonify({"message": "Email sent successfully"})
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
