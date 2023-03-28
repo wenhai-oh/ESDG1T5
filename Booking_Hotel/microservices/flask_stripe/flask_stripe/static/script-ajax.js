@@ -1,7 +1,7 @@
 const button = document.querySelector('#buy_now_btn');
 
 button.addEventListener('click', event => {
-    fetch('http://127.0.0.1:5800/stripe_pay')
+    fetch('http://127.0.0.1:5001/stripe_pay')
     .then((result) => { return result.json(); })
     .then((data) => {
         console.log(data)
