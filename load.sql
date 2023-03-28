@@ -2,6 +2,7 @@
 # drop database if exists customer_manager;
 # drop database if exists product_manager;
 # drop database if exists inventory_manager;
+# drop database if exists reservation_manager;
 
 
 # Customer Manager Database
@@ -55,6 +56,11 @@ insert into `inventory_manager` values('2023-03-13', 'Single Room', 200);
 insert into `inventory_manager` values('2023-03-13', 'Double Room', 150);
 insert into `inventory_manager` values('2023-03-13', 'Suite', 50);
 
+# Reservation Manager Database
+drop database if exists reservation_manager;
+create database reservation_manager;
+use reservation_manager;
+
 CREATE TABLE reservation_manager (
     reservationID INT NOT NULL,
     custID INT NOT NULL,
@@ -67,5 +73,5 @@ CREATE TABLE reservation_manager (
 
 INSERT INTO reservation_manager (reservationID, custID, StartDate, EndDate, productID, Quantity) 
 VALUES 
-(1, 1, '2023-03-24 14:30:00', '2023-03-27 14:30:00', 1, 2),
-(2, 2, '2023-03-24 14:30:00', '2023-03-29 14:30:00', 2, 1);
+(1, 1, '2023-03-24', '2023-03-27', 1, 2),
+(2, 2, '2023-03-24', '2023-03-29', 2, 1);
