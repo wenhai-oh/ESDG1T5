@@ -14,6 +14,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'lokezhankang@gmail.com' # replace with your email address
 app.config['MAIL_PASSWORD'] = 'pkewefqbhwwibywy' # replace with your email password
