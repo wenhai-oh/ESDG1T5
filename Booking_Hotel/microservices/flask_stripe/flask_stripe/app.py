@@ -8,15 +8,15 @@ CORS(app)
 
 # Added Strip_Public_Key and Stripe_Secret_Key from Dashboard Developer. [TEST]
 # Ignore yellow warnings - security issues cause secret key is hardcoded.
-app.config['STRIPE_PUBLIC_KEY'] = 'pk_test_51MqSh2HbqhyU3egayYvKbaPlW2sXFIKBUDJ5gXIztt4ADBLHECqufPM9TQ6aUxhFdBHDgqUAxJ9bOsrtY7laHK5C0059veyX9M'
-app.config['STRIPE_SECRET_KEY'] = 'sk_test_51MqSh2HbqhyU3egaZux6oGJx38MGy0CAJdEyY0CiX2LjtZmrhZLrqem7yxSbkGP8545jcNHk14aCy0yHKcdWh2n900ElLKzUNc'
+app.config['STRIPE_PUBLIC_KEY'] = 'pk_test_51Mp7eaDR3XsfzYNcPVimPRsWOP3xN2elpvGPv2yI1bq1DnBv8TZysOvfu3XIuuYDekgCNIlcPCbW7A6BWOBCgaOo00uW60aXX5'
+app.config['STRIPE_SECRET_KEY'] = 'sk_test_51Mp7eaDR3XsfzYNcNN274W7Hmlsuvr7nDhtFN1UtuVH9dHVBRVVC9PRbhrL5BZ2SVEGfmoFEO8Z7CYr7BuxszJng00ScaMPkRp'
 
 
 @app.route('/')
 def index():
     return render_template(
         # Try add ./template or just /template
-        'templates/Booking_Cart.html', 
+        '/Booking_Cart.html', 
         # checkout_session_id=session['id'], 
         # checkout_public_key=app.config['STRIPE_PUBLIC_KEY']
     )
@@ -25,12 +25,12 @@ def index():
 @cross_origin()
 def stripe_pay():
     # print('hello')
-    stripe.api_key = "sk_test_51MqSh2HbqhyU3egaZux6oGJx38MGy0CAJdEyY0CiX2LjtZmrhZLrqem7yxSbkGP8545jcNHk14aCy0yHKcdWh2n900ElLKzUNc"
+    stripe.api_key = "sk_test_51Mp7eaDR3XsfzYNcNN274W7Hmlsuvr7nDhtFN1UtuVH9dHVBRVVC9PRbhrL5BZ2SVEGfmoFEO8Z7CYr7BuxszJng00ScaMPkRp"
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         line_items=[{
             # Added Product API ID which is created under product tabs.
-            'price': 'price_1MqT0vHbqhyU3egaVAxDWtDy',
+            'price': 'price_1MpBteDR3XsfzYNcAahtVWmV',
             'quantity': 1,
         }],
         # Added Automatic Tax Config from Stripe Doc -- Calculate Tax - Registered in Tax Registry.
@@ -56,9 +56,14 @@ def stripe_pay():
         'checkout_public_key': app.config['STRIPE_PUBLIC_KEY']
     }
 
-@app.route('template/thanks')
+@app.route('/thanks')
 def thanks():
-    return render_template('thanks.html')
+    session_id = request.args.get('session_id')
+    stripe.api_key = "sk_test_51Mp7eaDR3XsfzYNcNN274W7Hmlsuvr7nDhtFN1UtuVH9dHVBRVVC9PRbhrL5BZ2SVEGfmoFEO8Z7CYr7BuxszJng00ScaMPkRp"
+    session = stripe.checkout.Session.retrieve(session_id)
+    payment_intent_id = session.payment_intent
+    print("Payment_Intend_ID to test for refund" + " " + payment_intent_id)
+    return render_template('/thanks.html')
 
 @app.route('/stripe_webhook', methods=['POST'])
 def stripe_webhook():
