@@ -17,8 +17,8 @@ product_manager_URL = os.environ.get('product_manager_URL') or "http://localhost
 inventory_manager_URL = os.environ.get('inventory_manager_URL') or "http://localhost:5002/inventory"
 reservation_manager_URL = os.environ.get('reservation_manager_URL') or "http://localhost:5003/reservation_manager"
 customer_manager_URL = os.environ.get('customer_manager_URL') or "http://localhost:5004/customer_manager"
-notification_manager_URL = "http://localhost:5005/notification"
-payment_URL = "http://localhost:5006/payment"
+notification_manager_URL = os.environ.get('notification_manager_URL') or "http://localhost:5005/notification"
+payment_URL = os.environ.get('payment_URL') or "http://localhost:5006/payment"
 
 # Database Tables:
 # Customer Manager (CustID, Name, Gender, Email)
