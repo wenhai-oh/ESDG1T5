@@ -13,22 +13,48 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'lokezhankang@gmail.com' # replace with your email address
-app.config['MAIL_PASSWORD'] = 'pkewefqbhwwibywy' # replace with your email password
+app.config['MAIL_USERNAME'] = 'lokezhankang@gmail.com' # sender Gmail address
+app.config['MAIL_PASSWORD'] = 'pkewefqbhwwibywy' # sender Gmail app password
 mail = Mail(app)
 
-def generateOTP():
-    return "".join(str(random.randint(1, 9)) for _ in range(6))
+notification_manager_URL = os.environ.get('notification_manager_URL') or "http://localhost:5005/notification"
 
 @app.route('/send_otp')
 def send_otp():
-    otp = generateOTP()
-    msg = Message('Your One Time Password', sender = 'lokezhankang@gmail.com', recipients = ['lokezhankang@gmail.com']) # replace the list with the recipient's email address
+    otp = "".join(str(random.randint(1, 9)) for _ in range(6))
+    # replace the receipients list below with the recipient's email address
+    msg = Message('Your One Time Password', sender = 'lokezhankang@gmail.com', recipients = ['lokezhankang@gmail.com'])
     msg.body = f'Your OTP is {otp}.'
     mail.send(msg)
+
+    ### HOW TO INTEGRATE PROCESS_OTP WITH MAIL HERE??? ###
+
     return f'An OTP has been sent to your email. Your OTP is {otp}.'
 
+
+def process_OTP(mail):
+    print('\n-----Invoking Notification Manager microservice-----')
+    order_result = invoke_http(notification_manager_URL, method='POST', json=mail)
+    print('order_result:', order_result)
+  
+    code = order_result["code"]
+    message = json.dumps(order_result)
+    amqp_setup.check_setup()
+
+    if code not in range(200, 300):
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="notify", 
+            body=message, properties=pika.BasicProperties(delivery_mode = 2))        
+        print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(
+            code), order_result)
+    
+    else:           
+        amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="notify", 
+            body=message)
+        print("\nOrder status ({:d}) published to the RabbitMQ Exchange:".format(
+            code), order_result)
+
 if __name__ == '__main__':
+    print("This is flask " + os.path.basename(__file__) + " for placing an order...")
     app.run(host="0.0.0.0", port=5300, debug = True)
 
 
