@@ -1,6 +1,12 @@
-from flask import Flask
 from flask_mail import Mail, Message
 import random
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from invokes import invoke_http
+import os, sys
+import requests, json
+import amqp_setup, pika
 
 app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -17,7 +23,7 @@ def generateOTP():
 @app.route('/send_otp')
 def send_otp():
     otp = generateOTP()
-    msg = Message('Your One Time Password', sender = 'lokezhankang@gmail.com', recipients = ['lokezhankang@gmail.com']) # replace with the recipient's email address
+    msg = Message('Your One Time Password', sender = 'lokezhankang@gmail.com', recipients = ['lokezhankang@gmail.com']) # replace the list with the recipient's email address
     msg.body = f'Your OTP is {otp}.'
     mail.send(msg)
     return f'An OTP has been sent to your email. Your OTP is {otp}.'

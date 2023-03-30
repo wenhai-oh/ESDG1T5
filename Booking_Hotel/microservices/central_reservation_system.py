@@ -1,14 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime, timedelta
-
-import os
-import sys
-import requests
 from invokes import invoke_http
-import amqp_setup
-import pika
-import json
+import os, sys
+import requests, json
+import amqp_setup, pika
 
 app = Flask(__name__)
 CORS(app)
