@@ -1,74 +1,35 @@
-from os import environ
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from flask_mail import Mail, Message
+#!/usr/bin/env python3
+# The above shebang (#!) operator tells Unix-like environments
+# to run this file as a python3 script
 
-# from notification_manager import NotificationManager
-
-# Notification Manager ()
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('dbURL') # "mysql+mysqlconnector://root@localhost:3306/notification_manager"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'lokezhankang@gmail.com' # replace with your email address
-app.config['MAIL_PASSWORD'] = 'pkewefqbhwwibywy' # replace with your email password
-mail = Mail(app)
-
-# db = SQLAlchemy(app)
-CORS(app)
-
-#Send email through rabbitmq(ampq) server
-import pika
 import json
+import os
 
-# RabbitMQ server settings
-RABBITMQ_HOST = "localhost"
-RABBITMQ_PORT = 5672
-RABBITMQ_USER = "guest"
-RABBITMQ_PASSWORD = "guest"
-RABBITMQ_QUEUE = "email_queue"
+import amqp_setup
 
-# function to send email
-#email and email_content(OTP) are inputs provided by the CRS
-def send_email(email, email_content):
-    # connect to RabbitMQ server
-    connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host=RABBITMQ_HOST, port=RABBITMQ_PORT, credentials=pika.PlainCredentials(
-            RABBITMQ_USER, RABBITMQ_PASSWORD)))
+monitorBindingKey='notify'
+
+def receiveNotification():
+    amqp_setup.check_setup()
+        
+    queue_name = 'Notify'
     
-    channel = connection.channel()
+    # set up a consumer and start to wait for coming messages
+    amqp_setup.channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+    amqp_setup.channel.start_consuming() # an implicit loop waiting to receive messages; 
+    #it doesn't exit by default. Use Ctrl+C in the command window to terminate it.
 
-    channel.queue_declare(queue=RABBITMQ_QUEUE)
+def callback(channel, method, properties, body): # required signature for the callback; no return
+    print("\nReceived an order log by " + __file__)
+    processNotification(json.loads(body))
+    print() # print a new line feed
 
-    # create the email message
-    email_message = {
-        "to": email,
-        "subject": "Notification Email",
-        "content": email_content
-    }
+def processNotification(order):
+    print("Recording an order log:")
+    print(order)
 
-    # convert the email message to JSON
-    email_message_json = json.dumps(email_message)
 
-    # publish the email message to the queue
-    channel.basic_publish(exchange="", routing_key=RABBITMQ_QUEUE, body=email_message_json)
-
-    # close the connection
-    connection.close()
-
-# route to send email
-@app.route("/send_email", methods=['POST', 'GET'])
-def send_email_route():
-    email = request.form.get("email_address")
-    email_content = request.form.get("email_content")
-    send_email(email, email_content)
-    return jsonify({"message": "Email sent successfully"})
-
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5005, debug=True)
+if __name__ == "__main__":  # execute this program only if it is run as a script (not by 'import')
+    print("\nThis is " + os.path.basename(__file__), end='')
+    print(": monitoring routing key '{}' in exchange '{}' ...".format(monitorBindingKey, amqp_setup.exchangename))
+    receiveNotification()
