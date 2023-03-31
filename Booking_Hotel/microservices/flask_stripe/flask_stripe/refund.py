@@ -2,7 +2,7 @@ import stripe
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-stripe.api_key = 'YOUR_STRIPE_SECRET_KEY'
+stripe.api_key = 'sk_test_51Mp7eaDR3XsfzYNcNN274W7Hmlsuvr7nDhtFN1UtuVH9dHVBRVVC9PRbhrL5BZ2SVEGfmoFEO8Z7CYr7BuxszJng00ScaMPkRp'
 
 @app.route('/refund', methods=['POST'])
 def create_refund():
@@ -19,7 +19,7 @@ def create_refund():
         payment_intent=payment_intent_id
     )
     
-    return jsonify(refund), 200
+    return jsonify({'message': 'Refund Successful!'}), 200
 
 if __name__ == '__main__':
-    app.run(port=5800, debug=True)
+    app.run(port=5001, debug=True)
