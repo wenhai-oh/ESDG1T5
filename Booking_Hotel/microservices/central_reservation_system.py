@@ -1,12 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, session
 from flask_cors import CORS
 from datetime import datetime, timedelta
 from invokes import invoke_http
+import random
 import os, sys
 import requests, json
-import amqp_setup, pika
+import amqp_setup
+import pika
 
 app = Flask(__name__)
+app.secret_key = 'esdg1t5' # for session
 CORS(app)
 
 product_manager_URL = os.environ.get('product_manager_URL') or "http://localhost:5001/product"
@@ -85,10 +88,38 @@ def list_rooms(fromDate, toDate):
 # Send OTP to customer email. (notification microservice)
 # Customer enters OTP. Verify OTP.
 # If OTP is correct, delete reservation (reservationID) from Reservation Manager.
-@app.route("/crs/<int:reservationID>", methods=["DELETE"])
+@app.route("/crs/cancel/<int:reservationID>", methods=["DELETE"])
 def cancel_reservation(reservationID):
-    # wait for reservation microservice.
-    a = 1
+    # Get custID from Reservation Manager based on given reservationID.
+    reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="GET")
+    custID = reservation['data']['custID']
+    # Get customer name and email from Customer Manager based on custID.
+    customer = invoke_http(customer_manager_URL +  "/" + str(custID), method="GET")
+    customerName = customer['data']['name']
+    customerEmail = customer['data']['email']
+    # Generate random 6 digit OTP.
+    otp = str(random.randint(100000, 999999))
+    # Store the OTP and reservationID in a session variable to be used later by the verify_otp function.
+    session['otp'] = otp
+    session['reservationID'] = reservationID
+    # Send OTP to customer email. (notification microservice)
+    ###
+    ###
+    # redirect webapge to enter otp
+    return render_template('verify.html')
+
+@app.route('/verify-otp/<int:user_otp>', methods=['POST'])
+def verify_otp(user_otp):
+    # Get the OTP and reservationID from the session variable
+    otp = session['otp']
+    reservationID = session['reservationID']
+    # Verify the OTP entered by the user
+    if user_otp == otp:
+        # delete from reservation manager
+        reservation = invoke_http(reservation_manager_URL +  "/" + reservationID, method="DELETE")
+        return reservation
+    else:
+        return "OTP verification failed."
 # ================ END Use Case 2: Customer Cancel Reservation ================
 
 # ================ Use Case 3: Customer Make Payment for Room Reservation ================
