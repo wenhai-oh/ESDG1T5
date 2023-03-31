@@ -123,7 +123,10 @@ def verify_otp(user_otp):
 # ================ END Use Case 2: Customer Cancel Reservation ================
 
 # ================ Use Case 3: Customer Make Payment for Room Reservation ================
-# ...
+# Get productID and quantity from Reservation Manager based on given reservationID.
+# Get productRate from Product Manager based on productID.
+# Calculate total amount.
+# Call payment microservice to make payment.
 
 # ================ END Use Case 3: Customer Make Payment for Room Reservation ================
 
