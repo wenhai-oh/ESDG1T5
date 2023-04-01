@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request, abort
 from flask_cors import CORS, cross_origin
+import mysql.connector
 
 import stripe
 
@@ -62,6 +63,26 @@ def thanks():
     stripe.api_key = "sk_test_51Mp7eaDR3XsfzYNcNN274W7Hmlsuvr7nDhtFN1UtuVH9dHVBRVVC9PRbhrL5BZ2SVEGfmoFEO8Z7CYr7BuxszJng00ScaMPkRp"
     session = stripe.checkout.Session.retrieve(session_id)
     payment_intent_id = session.payment_intent
+
+    # create a connection to the MySQL server
+    conn = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='',
+        database='reservation_manager'
+    )
+    # create a cursor object
+    cursor = conn.cursor()
+
+    # update the value in the table
+    sql = "UPDATE reservation_manager SET session_id = " + payment_intent_id + " WHERE id = 1"
+    cursor.execute(sql)
+
+    # commit the changes
+    conn.commit()
+    # close the connection
+    conn.close()
+
     print("Payment_Intend_ID to test for refund" + " " + payment_intent_id)
     return render_template('/thanks.html')
 
