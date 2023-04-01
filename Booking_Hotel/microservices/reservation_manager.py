@@ -17,27 +17,30 @@ class ReservationManager(db.Model):
 
     reservationID = db.Column(db.Integer, primary_key=True)
     custID = db.Column(db.Integer, primary_key=True)
-    StartDate = db.Column(db.String(256),nullable=False)
-    EndDate = db.Column(db.String(256),nullable=False)
+    startDate = db.Column(db.String(256),nullable=False)
+    endDate = db.Column(db.String(256),nullable=False)
     productID = db.Column(db.Integer, primary_key=True)
-    Quantity = db.Column(db.Integer, primary_key=True)
+    quantity = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(256),nullable=False)
 
-    def __init__(self, reservationID, custID, StartDate, EndDate, productID, Quantity):
+    def __init__(self, reservationID, custID, startDate, endDate, productID, quantity, session_id):
         self.reservationID = reservationID
         self.custID = custID
-        self.StartDate = StartDate
-        self.EndDate = EndDate
+        self.startDate = startDate
+        self.endDate = endDate
         self.productID = productID
-        self.Quantity = Quantity
+        self.quantity = quantity
+        self.session_id = session_id
 
     def json(self):
         return {
             "reservationID": self.reservationID,
             "custID": self.custID,
-            "startDate" : self.StartDate,
-            "endDate" : self.EndDate,
+            "startDate" : self.startDate,
+            "endDate" : self.endDate,
             "productID": self.productID,
-            "quantity": self.Quantity,
+            "quantity": self.quantity,
+            "session_id": self.session_id
         }
       
 # Retrive custID/ProductID/Status by reservationID

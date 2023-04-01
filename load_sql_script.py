@@ -76,6 +76,7 @@ CREATE TABLE reservation_manager (
     endDate VARCHAR(256) NOT NULL,
     productID INT NOT NULL,
     quantity INT NOT NULL,
+    session_id varchar(256) NULL,
     PRIMARY KEY (reservationID, custID, productID, quantity)
 );
 

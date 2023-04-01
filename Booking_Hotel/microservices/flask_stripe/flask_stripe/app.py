@@ -75,8 +75,10 @@ def thanks():
     cursor = conn.cursor()
 
     # update the value in the table
-    sql = "UPDATE reservation_manager SET session_id = " + payment_intent_id + " WHERE id = 1"
-    cursor.execute(sql)
+    sql = "UPDATE reservation_manager SET session_id = %s WHERE reservationID = 1"
+    params = (payment_intent_id,)
+    cursor.execute(sql, params)
+    # cursor.execute(sql)
 
     # commit the changes
     conn.commit()

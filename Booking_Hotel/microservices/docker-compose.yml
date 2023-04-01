@@ -92,6 +92,21 @@ services:
     ports:
       - "5004:5004" 
 
+  ###################################
+  # Refund: The Refund microservice
+  ###################################
+  refund:
+    build:
+      context: ./
+      dockerfile: refund.Dockerfile
+    image: wenhai87/refund:esd
+    restart: always
+    environment:
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5005:5005"
+
+
   ####################################
   # RabbitMQ: The messaging broker   
   ####################################
@@ -116,6 +131,7 @@ services:
     restart: always
     depends_on: 
       # - payment
+      - refund
       - inventory
       - product
       - customer
@@ -130,6 +146,7 @@ services:
       inventory_manager_URL: http://inventory:5002/inventory_manager
       reservation_manager_URL: http://reservation:5003/reservation_manager
       customer_manager_URL: http://customer:5004/customer_manager
+      refund_URL: http://refund:5005/refund
       # notification_URL: http://notification:5005/notification
       # payment_URL: http://payment:5006/payment
     ports:
