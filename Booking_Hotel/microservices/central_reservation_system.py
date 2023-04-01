@@ -16,7 +16,7 @@ product_manager_URL = os.environ.get('product_manager_URL') or "http://localhost
 inventory_manager_URL = os.environ.get('inventory_manager_URL') or "http://localhost:5002/inventory"
 reservation_manager_URL = os.environ.get('reservation_manager_URL') or "http://localhost:5003/reservation_manager"
 customer_manager_URL = os.environ.get('customer_manager_URL') or "http://localhost:5004/customer_manager"
-notification_manager_URL = os.environ.get('notification_manager_URL') or "http://localhost:5005/notification"
+# notification_manager_URL = os.environ.get('notification_manager_URL') or "http://localhost:5005/notification"
 payment_URL = os.environ.get('payment_URL') or "http://localhost:5006/payment"
 
 # Database Tables:
@@ -82,13 +82,7 @@ def list_rooms(fromDate, toDate):
 
 
 # ================ Use Case 2: Customer Cancel Reservation ================
-# Get custID from Reservation Manager based on given reservationID.
-# Get customer name and email from Customer Manager based on custID.
-# Generate random 6 digit OTP.
-# Send OTP to customer email. (notification microservice)
-# Customer enters OTP. Verify OTP.
-# If OTP is correct, delete reservation (reservationID) from Reservation Manager.
-@app.route("/crs/cancel/<int:reservationID>", methods=["DELETE"])
+@app.route("/crs/cancel/<int:reservationID>", methods=["POST"])
 def cancel_reservation(reservationID):
     # Get custID from Reservation Manager based on given reservationID.
     reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="GET")
@@ -102,11 +96,20 @@ def cancel_reservation(reservationID):
     # Store the OTP and reservationID in a session variable to be used later by the verify_otp function.
     session['otp'] = otp
     session['reservationID'] = reservationID
+    subject = "Your OTP for cancelling reservation"
+    content = "Dear " + customerName + ",\n\nYour OTP is " + str(otp) + ".\n\nThank you."
+
     # Send OTP to customer email. (notification microservice)
-    ###
-    ###
+    message = json.dumps({"customerEmail": customerEmail, "subject": subject, "content": content})
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="notify", 
+        body=message, properties=pika.BasicProperties(delivery_mode = 2))
+    
     # redirect webapge to enter otp
-    return render_template('verify.html')
+    # return render_template('verify.html')
+    return jsonify({
+        "code": 200,
+        "message": "OTP sent to customer email."
+    })
 
 @app.route('/verify-otp/<int:user_otp>', methods=['POST'])
 def verify_otp(user_otp):
@@ -116,17 +119,30 @@ def verify_otp(user_otp):
     # Verify the OTP entered by the user
     if user_otp == otp:
         # delete from reservation manager
-        reservation = invoke_http(reservation_manager_URL +  "/" + reservationID, method="DELETE")
-        return reservation
+        reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="DELETE")
+        ## process refund.
     else:
         return "OTP verification failed."
 # ================ END Use Case 2: Customer Cancel Reservation ================
 
 # ================ Use Case 3: Customer Make Payment for Room Reservation ================
-# Get productID and quantity from Reservation Manager based on given reservationID.
-# Get productRate from Product Manager based on productID.
-# Calculate total amount.
-# Call payment microservice to make payment.
+@app.route("/crs/payment/<int:reservationID>", methods=["POST"])
+def make_payment(reservationID):
+    # Get productID and quantity from Reservation Manager based on given reservationID.
+    reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="GET")
+    productID = reservation['data']['productID']
+    quantity = reservation['data']['quantity']
+    # Get productRate from Product Manager based on productID.
+    product = invoke_http(product_manager_URL +  "/id/" + str(productID), method="GET")
+    productRate = product['data']['productRate']
+    # Calculate total amount.
+    totalAmount = productRate * quantity
+    # Call payment microservice to make payment.
+
+    # return output
+    return jsonify({
+        "data": totalAmount
+        }), 200
 
 # ================ END Use Case 3: Customer Make Payment for Room Reservation ================
 
