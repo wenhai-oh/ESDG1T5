@@ -1,10 +1,17 @@
-# drop all databases (testing purpose)
-# drop database if exists customer_manager;
-# drop database if exists product_manager;
-# drop database if exists inventory_manager;
-# drop database if exists reservation_manager;
+import mysql.connector
 
+# establish connection to MySQL
+db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password=""
+)
 
+# create cursor
+cursor = db.cursor()
+
+# define script
+script = """
 # Customer Manager Database
 drop database if exists customer_manager;
 create database customer_manager;
@@ -76,3 +83,21 @@ INSERT INTO reservation_manager (reservationID, custID, startDate, endDate, prod
 VALUES 
 (1, 1, '2023-03-24', '2023-03-27', 1, 2),
 (2, 2, '2023-03-24', '2023-03-29', 2, 1);
+"""
+
+# execute script
+for result in cursor.execute(script, multi=True):
+    if result.with_rows:
+        print("Rows produced by statement '{}':".format(
+            result.statement))
+        print(result.fetchall())
+    else:
+        print("Number of rows affected by statement '{}': {}".format(
+            result.statement, result.rowcount))
+
+# commit changes
+db.commit()
+
+# close cursor and database connection
+cursor.close()
+db.close()
