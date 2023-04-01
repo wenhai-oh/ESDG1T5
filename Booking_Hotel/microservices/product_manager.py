@@ -73,5 +73,25 @@ def find_by_productName(productName):
             "message": "Product with Name {} not found.".format(productName)
         }
     ), 404
+
+# Get product by productID.
+# Returns in the format of JSON.
+@app.route("/product_manager/id/<int:productID>")
+def find_by_productID(productID):
+    product = ProductManager.query.filter_by(productID=productID).first()
+    if product:
+        return jsonify(
+            {
+                "code": 200,
+                "data": product.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Product with Name {} not found.".format(productID)
+        }
+    ), 404
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
