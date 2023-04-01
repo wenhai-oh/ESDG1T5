@@ -12,17 +12,28 @@ def create_refund(payment_intent_id):
         # # Retrieve the session
         # session = stripe.checkout.Session.retrieve(session_id)
         
-        # # Get the payment intent ID from the session
+        # Get the payment intent ID from the session
         # payment_intent_id = session['payment_intent']
         
         # Create the refund
         refund = stripe.Refund.create(
-            payment_intent=payment_intent_id
+            charge=payment_intent_id,
+            amount=5000, # cents
         )
         
-        return jsonify({'message': 'Refund Successful!'}), 200
-    except:
-        return 'Unsuccesful Refund due to reasons'
+        return jsonify(
+            {
+                "code": 200,
+                "data": refund.json()
+            }
+        )
+    except stripe.error.StripeError as e:
+        return jsonify(
+            {
+                "code": 400,
+                "data": 'Invalid Request Error: {}'.format(e)
+            }
+        )
 
 if __name__ == '__main__':
-    app.run(port=5005, debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)
