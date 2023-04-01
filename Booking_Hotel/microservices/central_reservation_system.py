@@ -17,6 +17,7 @@ inventory_manager_URL = os.environ.get('inventory_manager_URL') or "http://local
 reservation_manager_URL = os.environ.get('reservation_manager_URL') or "http://localhost:5003/reservation_manager"
 customer_manager_URL = os.environ.get('customer_manager_URL') or "http://localhost:5004/customer_manager"
 # notification_manager_URL = os.environ.get('notification_manager_URL') or "http://localhost:5005/notification"
+refund_URL = os.environ.get('refund_URL') or "http://localhost:5005/refund"
 payment_URL = os.environ.get('payment_URL') or "http://localhost:5006/payment"
 
 # Database Tables:
@@ -133,8 +134,10 @@ def verify_otp():
 def cancel_reservation():
     reservationID = session['reservationID']
     reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="DELETE")
+    # get session_id from reservation manager
+    session_id = reservation['data']['session_id']
     ## process refund.
-
+    refund = invoke_http(refund_URL +  "/" + str(session_id), method="DELETE")
     return redirect('http://localhost/ESDG1T5/Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/Checkinn_Index.html')
 # ================ END Use Case 2: Customer Cancel Reservation ================
 
