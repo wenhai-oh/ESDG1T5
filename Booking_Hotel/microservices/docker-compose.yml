@@ -19,14 +19,18 @@ services:
   ###################################
   # Notification: The Notification microservice
   ###################################
-  # notification:
-  #   build:
-  #     context: ./
-  #     dockerfile: notification.Dockerfile
-  #   image: wenhai87/notification:esd
-  #   restart: always
-  #   environment:
-  #     PYTHONUNBUFFERED: 1
+  notification:
+    build:
+      context: ./
+      dockerfile: notification1.Dockerfile
+    image: wenhai87/notification:esd
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      PYTHONUNBUFFERED: 1
 
   ###################################
   # Product: The Product microservice
@@ -40,8 +44,8 @@ services:
     environment:
       dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/product_manager
       PYTHONUNBUFFERED: 1
-    # ports:
-    #   - "5001:5001"
+    ports:
+      - "5001:5001"
 
   ###################################
   # Inventory: The Inventory microservice
@@ -55,8 +59,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/inventory_manager
       PYTHONUNBUFFERED: 1
-    # ports:
-    #   - "5002:5002"
+    ports:
+      - "5002:5002"
 
   ##################################
   # Reservation: The Reservation microservice
@@ -70,8 +74,8 @@ services:
     environment:
       dbURL:  mysql+mysqlconnector://is213@host.docker.internal:3306/reservation_manager
       PYTHONUNBUFFERED: 1
-    # ports:
-    #   - "5003:5003"    
+    ports:
+      - "5003:5003"    
 
   ##################################
   # Customer: The Customer microservice
@@ -85,8 +89,8 @@ services:
     environment:
       dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/customer_manager
       PYTHONUNBUFFERED: 1
-    # ports:
-    #   - "5004:5004" 
+    ports:
+      - "5004:5004" 
 
   ####################################
   # RabbitMQ: The messaging broker   
@@ -117,6 +121,7 @@ services:
       - customer
       - reservation
       - rabbitmq
+      - notification
     environment:
       rabbit_host: rabbitmq
       rabbit_port: 5672
