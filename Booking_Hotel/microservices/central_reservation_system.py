@@ -106,8 +106,8 @@ def send_otp():
         body=message, properties=pika.BasicProperties(delivery_mode = 2))
     
     # redirect webapge to enter otp
-    # return render_template('verify_otp.html')
-    return redirect('Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/Verify_OTP.html')
+    # return render_template('http://localhost/ESDG1T5/Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/verify_otp.html')
+    return redirect('http://localhost/ESDG1T5/Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/verify_otp.html')
 
 @app.route('/crs/verify_otp', methods=['POST'])
 def verify_otp():
@@ -125,17 +125,17 @@ def verify_otp():
     # Verify the OTP entered by the user
     if user_otp == str(otp):
         # redirect to cancel_reservation function
-        return render_template('Cancel_Reservation.html')
+        return redirect('http://localhost/ESDG1T5/Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/Cancel_Reservation.html')
     else:
         return "OTP verification failed."
     
-@app.route('/cancel_reservation', methods=['POST'])
+@app.route('/crs/cancel_reservation', methods=['POST'])
 def cancel_reservation():
     reservationID = session['reservationID']
     reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="DELETE")
     ## process refund.
 
-    return render_template('Checkinn_Index.html')
+    return redirect('http://localhost/ESDG1T5/Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/Checkinn_Index.html')
 # ================ END Use Case 2: Customer Cancel Reservation ================
 
 # ================ Use Case 3: Customer Make Payment for Room Reservation ================
