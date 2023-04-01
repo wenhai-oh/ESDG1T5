@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, session
+from flask import Flask, request, jsonify, render_template, session, redirect
 from flask_cors import CORS
 from datetime import datetime, timedelta
 from invokes import invoke_http
@@ -82,8 +82,9 @@ def list_rooms(fromDate, toDate):
 
 
 # ================ Use Case 2: Customer Cancel Reservation ================
-@app.route("/crs/cancel/<int:reservationID>", methods=["POST"])
-def cancel_reservation(reservationID):
+@app.route("/send_otp", methods=["POST"])
+def send_otp():
+    reservationID = request.form['reservationID']
     # Get custID from Reservation Manager based on given reservationID.
     reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="GET")
     custID = reservation['data']['custID']
@@ -105,39 +106,65 @@ def cancel_reservation(reservationID):
         body=message, properties=pika.BasicProperties(delivery_mode = 2))
     
     # redirect webapge to enter otp
-    # return render_template('verify.html')
-    return jsonify({
-        "code": 200,
-        "message": "OTP sent to customer email."
-    })
+    # return render_template('verify_otp.html')
+    return redirect('Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/Verify_OTP.html')
 
-@app.route('/verify-otp/<int:user_otp>', methods=['POST'])
-def verify_otp(user_otp):
+@app.route('/crs/verify_otp', methods=['POST'])
+def verify_otp():
+    first = request.form['first']
+    second = request.form['second']
+    third = request.form['third']
+    fourth = request.form['fourth']
+    fifth = request.form['fifth']
+    sixth = request.form['sixth']
+    user_otp = str(first) + str(second) + str(third) + str(fourth) + str(fifth) + str(sixth)
+
     # Get the OTP and reservationID from the session variable
     otp = session['otp']
     reservationID = session['reservationID']
     # Verify the OTP entered by the user
-    if user_otp == otp:
-        # delete from reservation manager
-        reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="DELETE")
-        ## process refund.
+    if user_otp == str(otp):
+        # redirect to cancel_reservation function
+        return render_template('Cancel_Reservation.html')
     else:
         return "OTP verification failed."
+    
+@app.route('/cancel_reservation', methods=['POST'])
+def cancel_reservation():
+    reservationID = session['reservationID']
+    reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="DELETE")
+    ## process refund.
+
+    return render_template('Checkinn_Index.html')
 # ================ END Use Case 2: Customer Cancel Reservation ================
 
 # ================ Use Case 3: Customer Make Payment for Room Reservation ================
 @app.route("/crs/payment/<int:reservationID>", methods=["POST"])
 def make_payment(reservationID):
-    # Get productID and quantity from Reservation Manager based on given reservationID.
+    # Get custID, productID and quantity from Reservation Manager based on given reservationID.
     reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="GET")
+    custID = reservation['data']['custID']
     productID = reservation['data']['productID']
     quantity = reservation['data']['quantity']
+    # Get customer name and email from Customer Manager based on custID.
+    customer = invoke_http(customer_manager_URL +  "/" + str(custID), method="GET")
+    customerName = customer['data']['name']
+    customerEmail = customer['data']['email']
+
     # Get productRate from Product Manager based on productID.
     product = invoke_http(product_manager_URL +  "/id/" + str(productID), method="GET")
     productRate = product['data']['productRate']
     # Calculate total amount.
     totalAmount = productRate * quantity
     # Call payment microservice to make payment.
+
+
+    # If payment is successful, send email to customer.
+    subject = "Your payment for reservation"
+    content = "Dear " + customerName + ",\n\nYour payment of $" + str(totalAmount) + " is successful.\n\nThank you."
+    message = json.dumps({"customerEmail": customerEmail, "subject": subject, "content": content})
+    amqp_setup.channel.basic_publish(exchange=amqp_setup.exchangename, routing_key="notify", 
+        body=message, properties=pika.BasicProperties(delivery_mode = 2))
 
     # return output
     return jsonify({
