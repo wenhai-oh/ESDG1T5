@@ -137,6 +137,8 @@ def cancel_reservation():
     session_id = reservation['data']['session_id']
     refund = invoke_http(refund_URL +  "/" + str(session_id), method="POST")  
     reservation = invoke_http(reservation_manager_URL +  "/" + str(reservationID), method="DELETE")
+    # get session_id from reservation manager
+    session_id = reservation['data']['session_id']
     ## process refund.
     # get session_id from reservation manager
     return redirect('http://localhost/ESDG1T5/Booking_Hotel/microservices/flask_stripe/flask_stripe/templates/Checkinn_Index.html')
