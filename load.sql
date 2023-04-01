@@ -18,7 +18,8 @@ create table `customer_manager` (
 	constraint customer_manager_pk primary key (`custID`)
 );
 
-insert into `customer_manager` values(1, 'John', 'Male', 'john.doe@gmail.com');
+insert into `customer_manager` values(1, 'Wen Hai', 'Male', 'wenhai87p@gmail.com');
+insert into `customer_manager` values(2, 'John', 'Male', 'john.doe@gmail.com');
 
 # Product Manager Database
 drop database if exists product_manager;
@@ -64,14 +65,14 @@ use reservation_manager;
 CREATE TABLE reservation_manager (
     reservationID INT NOT NULL,
     custID INT NOT NULL,
-    StartDate VARCHAR(256) NOT NULL,
-    EndDate VARCHAR(256) NOT NULL,
+    startDate VARCHAR(256) NOT NULL,
+    endDate VARCHAR(256) NOT NULL,
     productID INT NOT NULL,
-    Quantity INT NOT NULL,
-    PRIMARY KEY (reservationID, custID, productID, Quantity)
+    quantity INT NOT NULL,
+    PRIMARY KEY (reservationID, custID, productID, quantity)
 );
 
-INSERT INTO reservation_manager (reservationID, custID, StartDate, EndDate, productID, Quantity) 
+INSERT INTO reservation_manager (reservationID, custID, startDate, endDate, productID, quantity) 
 VALUES 
 (1, 1, '2023-03-24', '2023-03-27', 1, 2),
 (2, 2, '2023-03-24', '2023-03-29', 2, 1);
