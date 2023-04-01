@@ -34,10 +34,10 @@ class ReservationManager(db.Model):
         return {
             "reservationID": self.reservationID,
             "custID": self.custID,
-            "StartDate" : self.StartDate,
-            "EndDate" : self.EndDate,
+            "startDate" : self.StartDate,
+            "endDate" : self.EndDate,
             "productID": self.productID,
-            "Quantity": self.Quantity,
+            "quantity": self.Quantity,
         }
       
 # Retrive custID/ProductID/Status by reservationID
