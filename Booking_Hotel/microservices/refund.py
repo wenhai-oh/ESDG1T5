@@ -17,14 +17,14 @@ def create_refund(payment_intent_id):
         
         # Create the refund
         refund = stripe.Refund.create(
-            charge=payment_intent_id,
-            amount=5000, # cents
+            payment_intent = payment_intent_id,
+            amount=13932, # hardcoded amount - cents
         )
         
         return jsonify(
             {
                 "code": 200,
-                "data": refund.json()
+                "data": refund
             }
         )
     except stripe.error.StripeError as e:
